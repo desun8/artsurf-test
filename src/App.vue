@@ -8,9 +8,9 @@
     />
     <modal-edit
       v-show="shouldModalShow"
-      :id="itemID"
-      :def-name="itemName"
-      :def-description="itemDescription"
+      :id="modalData.id"
+      :modal-name="modalData.name"
+      :modal-description="modalData.description"
       :change-item="changeItem"
       :close-modal="closeModal"
     />
@@ -37,9 +37,11 @@ export default {
       hasMore: true,
       isLoading: false,
       shouldModalShow: false,
-      itemID: undefined,
-      itemName: "",
-      itemDescription: ""
+      modalData: {
+        id: undefined,
+        name: "",
+        description: ""
+      }
     };
   },
   methods: {
@@ -89,11 +91,13 @@ export default {
       this.beersList = this.beersList.filter(el => el.id !== id);
     },
 
+    changeModalData(id, name, description) {
+      this.modalData = { id, name, description };
+    },
+
     openModal(id, name, description) {
       this.shouldModalShow = true;
-      this.itemID = id;
-      this.itemName = name;
-      this.itemDescription = description;
+      this.changeModalData(id, name, description);
     },
 
     closeModal() {

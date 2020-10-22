@@ -49,11 +49,11 @@ export default {
   },
   props: {
     id: Number,
-    defName: {
+    modalName: {
       type: String,
       default: ""
     },
-    defDescription: {
+    modalDescription: {
       type: String,
       default: ""
     },
@@ -68,12 +68,12 @@ export default {
   },
 
   watch: {
-    defName(val, prevVal) {
+    modalName(val, prevVal) {
       if (val !== prevVal) {
         this.name = val;
       }
     },
-    defDescription(val, prevVal) {
+    modalDescription(val, prevVal) {
       if (val !== prevVal) {
         this.description = val;
       }
