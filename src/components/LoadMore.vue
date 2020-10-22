@@ -1,6 +1,6 @@
 <template>
   <button :class="{ 'is-hidden': isHidden }" @click="handleClick">
-    Show next
+    {{ isLoading ? "Loading" : "Show next" }}
   </button>
 </template>
 
@@ -12,6 +12,9 @@ export default {
   computed: {
     isHidden() {
       return !this.$store.state.hasMore;
+    },
+    isLoading() {
+      return this.$store.state.isLoading;
     }
   },
   methods: {

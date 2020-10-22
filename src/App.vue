@@ -1,12 +1,15 @@
 <template>
-  <div v-if="beerList">
+  <template v-if="beerList">
     <List :data="beerList" />
 
     <LoadMore />
 
     <ModalEdit v-show="shouldModalShow" />
-  </div>
-  <div v-if="fetchError" class="error">🤷🏻‍♂️</div>
+  </template>
+  <template v-if="fetchError">
+    <span class="visually-hidden">Error</span>
+    <span class="error">🤷🏻‍♂️</span>
+  </template>
 </template>
 
 <script>
