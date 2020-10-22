@@ -1,104 +1,53 @@
 <template>
-  <div v-if="beersList">
-    <list :data="beersList" :openModal="openModal" :removeItem="removeItem" />
-    <load-more :fetch-data="fetchData" :hasMore="hasMore" />
-    <modal-edit
-      v-show="shouldModalShow"
-      :id="itemID"
-      :def-name="itemName"
-      :def-description="itemDescription"
-      :change-item="changeItem"
-      :close-modal="closeModal"
-    />
+  <div v-if="beerList">
+    <List :data="beerList" />
+
+    <LoadMore />
+
+    <ModalEdit v-show="shouldModalShow" />
   </div>
-  <div v-else class="error">🤷🏻‍♂️</div>
+  <div v-if="fetchError" class="error">🤷🏻‍♂️</div>
 </template>
 
 <script>
-import axios from "axios";
 import List from "@/components/List.vue";
 import LoadMore from "@/components/LoadMore.vue";
 import ModalEdit from "@/components/ModalEdit.vue";
+import { FETCH_DATA } from "@/store/types";
 
 export default {
   name: "App",
   components: { ModalEdit, LoadMore, List },
-  data() {
-    return {
-      beersList: undefined,
-      page: 1,
-      hasMore: true,
-      isLoading: false,
-      shouldModalShow: false,
-      itemID: undefined,
-      itemName: "",
-      itemDescription: ""
-    };
+  computed: {
+    beerList() {
+      return this.$store.state.beerList;
+    },
+
+    shouldModalShow() {
+      return this.$store.state.shouldModalShow;
+    },
+
+    fetchError() {
+      return this.$store.state.fetchError;
+    }
   },
+
   methods: {
-    async fetchData() {
-      try {
-        if (this.isLoading === false) {
-          this.isLoading = true;
-
-          const res = await axios.get(
-            `https://api.punkapi.com/v2/beers?page=${this.page}&limit=25`
-          );
-          const data = await res.data;
-
-          if (data.length < 1) {
-            this.hasMore = false;
-          }
-
-          if (this.hasMore) {
-            if (this.beersList === undefined) {
-              this.removePreloader();
-              this.beersList = data;
-            } else {
-              this.beersList = [...this.beersList, ...data];
-            }
-
-            this.page += 1;
-            this.isLoading = false;
-          }
-        }
-      } catch (e) {
-        console.error("App.vue -> fetchData() -> ", e);
-        this.removePreloader();
-      }
-    },
-
-    changeItem(id, name, description) {
-      this.beersList = this.beersList.map(el => {
-        if (el.id === id) {
-          return { ...el, name, description };
-        }
-
-        return el;
-      });
-    },
-
-    removeItem(id) {
-      this.beersList = this.beersList.filter(el => el.id !== id);
-    },
-
-    openModal(id, name, description) {
-      this.shouldModalShow = true;
-      this.itemID = id;
-      this.itemName = name;
-      this.itemDescription = description;
-    },
-
-    closeModal() {
-      this.shouldModalShow = false;
-    },
-
     removePreloader() {
       document.querySelector("#preloader").style.display = "none";
     }
   },
+
+  watch: {
+    beerList(val) {
+      if (val !== undefined || val?.length !== 0) {
+        this.removePreloader();
+      }
+    }
+  },
+
   mounted() {
-    this.fetchData();
+    this.$store.dispatch(FETCH_DATA);
   }
 };
 </script>

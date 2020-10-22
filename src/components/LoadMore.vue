@@ -1,25 +1,22 @@
 <template>
-  <button :class="{ 'is-hidden': !hasMore }" @click="handleClick">
+  <button :class="{ 'is-hidden': isHidden }" @click="handleClick">
     Show next
   </button>
 </template>
 
 <script>
+import { FETCH_DATA } from "@/store/types";
+
 export default {
   name: "LoadMore",
-  props: {
-    fetchData: {
-      type: Function,
-      required: true
-    },
-    hasMore: {
-      type: Boolean,
-      required: true
+  computed: {
+    isHidden() {
+      return !this.$store.state.hasMore;
     }
   },
   methods: {
     handleClick() {
-      this.fetchData();
+      this.$store.dispatch(FETCH_DATA);
     }
   }
 };

@@ -5,7 +5,8 @@
         <div class="modal__field">
           <label for="name">Name:</label>
           <input
-            v-model="name"
+            :value="name"
+            @input="handleInput"
             @focus="handleFocus"
             id="name"
             name="name"
@@ -17,7 +18,8 @@
         <div class="modal__field">
           <label for="description">Description:</label>
           <textarea
-            v-model="description"
+            :value="description"
+            @input="handleInput"
             @focus="handleFocus"
             id="description"
             class="modal__description"
@@ -39,59 +41,42 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { EDIT_ITEM, SET_MODAL_DATA, TOGGLE_MODAL } from "@/store/types";
+
 export default {
   name: "ModalEdit",
-  data() {
-    return {
-      name: "",
-      description: ""
-    };
-  },
-  props: {
-    id: Number,
-    defName: {
-      type: String,
-      default: ""
-    },
-    defDescription: {
-      type: String,
-      default: ""
-    },
-    changeItem: {
-      type: Function,
-      required: true
-    },
-    closeModal: {
-      type: Function,
-      required: true
-    }
-  },
-
-  watch: {
-    defName(val, prevVal) {
-      if (val !== prevVal) {
-        this.name = val;
-      }
-    },
-    defDescription(val, prevVal) {
-      if (val !== prevVal) {
-        this.description = val;
-      }
-    }
+  computed: {
+    ...mapState({
+      id: state => state.modalData.id,
+      name: state => state.modalData.name,
+      description: state => state.modalData.description
+    })
   },
 
   methods: {
+    closeModal() {
+      this.$store.dispatch(TOGGLE_MODAL, false);
+    },
+
     handleFocus(e) {
       e.currentTarget.select();
     },
 
     handleSubmit() {
-      this.changeItem(this.id, this.name, this.description);
+      const { id, name, description } = this;
+
+      this.$store.dispatch(EDIT_ITEM, { id, name, description });
       this.closeModal();
     },
 
     handleClick() {
       this.closeModal();
+    },
+
+    handleInput(e) {
+      const name = e.target.name;
+      this.$store.commit(SET_MODAL_DATA, { [name]: e.target.value });
     }
   }
 };

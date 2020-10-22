@@ -1,6 +1,6 @@
 <template>
   <ol class="list">
-    <list-item
+    <ListItem
       v-for="item in data"
       :key="item.id"
       :id="item.id"
@@ -8,8 +8,6 @@
       :img-src="item.image_url"
       :description="item.description"
       :tips="item.brewers_tips"
-      :edit="openModal"
-      :remove="removeItem"
     />
   </ol>
 </template>
@@ -22,14 +20,6 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true
-    },
-    openModal: {
-      type: Function,
-      required: true
-    },
-    removeItem: {
-      type: Function,
       required: true
     }
   }

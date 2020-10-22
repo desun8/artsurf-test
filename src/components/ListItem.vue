@@ -4,7 +4,7 @@
       <h2 class="item__name">{{ name }}</h2>
 
       <div class="item__btn-group">
-        <button @click="handleEdit" class="item__btn item__btn--edit">
+        <button @click="handleOpen" class="item__btn item__btn--edit">
           edit
         </button>
         <button @click="handleRemove" class="item__btn item__btn--remove">
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { REMOVE_ITEM, SET_MODAL_DATA, TOGGLE_MODAL } from "@/store/types";
+
 export default {
   name: "ListItem",
   props: {
@@ -46,22 +48,18 @@ export default {
     tips: {
       type: String,
       required: true
-    },
-    edit: {
-      type: Function,
-      required: true
-    },
-    remove: {
-      type: Function,
-      required: true
     }
   },
   methods: {
-    handleEdit() {
-      this.edit(this.id, this.name, this.description);
+    handleOpen() {
+      const { id, name, description } = this;
+
+      this.$store.dispatch(TOGGLE_MODAL, true);
+      this.$store.dispatch(SET_MODAL_DATA, { id, name, description });
     },
+
     handleRemove() {
-      this.remove(this.id);
+      this.$store.dispatch(REMOVE_ITEM, this.id);
     }
   }
 };
