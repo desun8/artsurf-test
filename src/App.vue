@@ -1,7 +1,11 @@
 <template>
-  <div v-if="beersList">
+  <template v-if="beersList">
     <list :data="beersList" :openModal="openModal" :removeItem="removeItem" />
-    <load-more :fetch-data="fetchData" :hasMore="hasMore" />
+    <load-more
+      :fetch-data="fetchData"
+      :hasMore="hasMore"
+      :isLoading="isLoading"
+    />
     <modal-edit
       v-show="shouldModalShow"
       :id="itemID"
@@ -10,8 +14,11 @@
       :change-item="changeItem"
       :close-modal="closeModal"
     />
-  </div>
-  <div v-else class="error">🤷🏻‍♂️</div>
+  </template>
+  <template v-else>
+    <span class="visually-hidden">Error</span>
+    <span class="error">🤷🏻‍♂️</span>
+  </template>
 </template>
 
 <script>

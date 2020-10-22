@@ -1,6 +1,6 @@
 <template>
   <button :class="{ 'is-hidden': !hasMore }" @click="handleClick">
-    Show next
+    {{ isLoading ? "Loading" : "Show next" }}
   </button>
 </template>
 
@@ -14,6 +14,10 @@ export default {
     },
     hasMore: {
       type: Boolean,
+      required: true
+    },
+    isLoading: {
+      type: String,
       required: true
     }
   },
