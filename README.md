@@ -1,7 +1,7 @@
 # artsurf-test
 Ветка `main` - [testartsurf.netlify.app](https://testartsurf.netlify.app/).
 
-Ветка `vuex` - [vuex-testartsurf.netlify.app](https://vuex-testartsurf.netlify.app/). Соотвественно здесь вариант с использованием **vuex**.
+Ветка `vuex` - [vuex--testartsurf.netlify.app](https://vuex--testartsurf.netlify.app/). Соотвественно здесь вариант с использованием **vuex**.
 
 ## Project setup
 ```
