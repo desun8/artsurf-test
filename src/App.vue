@@ -7,7 +7,7 @@
       :isLoading="isLoading"
     />
     <modal-edit
-      v-show="shouldModalShow"
+      :is-show="shouldModalShow"
       :id="modalData.id"
       :modal-name="modalData.name"
       :modal-description="modalData.description"

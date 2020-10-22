@@ -1,5 +1,5 @@
 <template>
-  <button :class="{ 'is-hidden': !hasMore }" @click="handleClick">
+  <button :class="{ 'is-hidden': !hasMore }" @click="handleClick" type="button">
     {{ isLoading ? "Loading" : "Show next" }}
   </button>
 </template>
@@ -17,13 +17,27 @@ export default {
       required: true
     },
     isLoading: {
-      type: String,
+      type: Boolean,
       required: true
     }
   },
   methods: {
-    handleClick() {
-      this.fetchData();
+    getLastItem() {
+      const items = Array.from(document.querySelectorAll(".list .item"));
+      const lastIndex = items.length - 1;
+      return items[lastIndex];
+    },
+
+    async handleClick() {
+      // для скрин ридера
+      // после "клика" возвращается фокус на последний элемент,
+      // до вставки нового
+      const lastItem = this.getLastItem();
+
+      await this.fetchData();
+
+      lastItem.tabIndex = 0;
+      lastItem.focus();
     }
   }
 };

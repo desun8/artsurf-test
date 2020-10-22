@@ -5,10 +5,18 @@
         <h2 class="item__name">{{ name }}</h2>
 
         <div class="item__btn-group">
-          <button @click="handleEdit" class="item__btn item__btn--edit">
+          <button
+            @click="handleEdit"
+            class="item__btn item__btn--edit"
+            :aria-label="`Edit ${name} item`"
+          >
             edit
           </button>
-          <button @click="handleRemove" class="item__btn item__btn--remove">
+          <button
+            @click="handleRemove"
+            class="item__btn item__btn--remove"
+            :aria-label="`Remove ${name} item`"
+          >
             remove
           </button>
         </div>
@@ -22,8 +30,14 @@
         height="200"
         loading="lazy"
       />
-      <p class="item__describe">{{ description }}</p>
-      <p class="item__tips">{{ tips }}</p>
+      <div class="item__describe">
+        <h3 class="visually-hidden">Description</h3>
+        <p>{{ description }}</p>
+      </div>
+      <div class="item__tips">
+        <h3 class="visually-hidden">Brewers tips</h3>
+        <p>{{ tips }}</p>
+      </div>
     </div>
   </li>
 </template>

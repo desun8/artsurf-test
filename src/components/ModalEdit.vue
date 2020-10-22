@@ -1,53 +1,74 @@
 <template>
-  <transition name="fade">
-    <div @click.self="handleClick" class="wrap">
-      <form @submit.prevent="handleSubmit" class="modal">
-        <div class="modal__field">
-          <label for="name">Name:</label>
-          <input
-            v-model="name"
-            @focus="handleFocus"
-            id="name"
-            name="name"
-            type="text"
-            class="modal__name"
-          />
-        </div>
+  <div
+    ref="modal"
+    class="dialog-container"
+    id="my-accessible-dialog"
+    aria-hidden="true"
+  >
+    <div tabindex="-1" data-a11y-dialog-hide></div>
+    <dialog aria-labelledby="dialog-title">
+      <h1 id="dialog-title" class="visually-hidden">
+        Edit item name and description
+      </h1>
 
-        <div class="modal__field">
-          <label for="description">Description:</label>
-          <textarea
-            v-model="description"
-            @focus="handleFocus"
-            id="description"
-            class="modal__description"
-            name="description"
-            cols="30"
-            rows="10"
-          ></textarea>
-        </div>
+      <div @click.self="handleClose" class="wrap">
+        <form @submit.prevent="handleSubmit" class="modal">
+          <div class="modal__field">
+            <label for="name">Name:</label>
+            <input
+              v-model="name"
+              @focus="handleFocus"
+              id="name"
+              name="name"
+              type="text"
+              class="modal__name"
+            />
+          </div>
 
-        <div class="modal__field  modal__field--col-2">
-          <button class="modal__btn-save" type="submit">save</button>
-          <button @click="closeModal" class="modal__btn-close" type="button">
-            close
-          </button>
-        </div>
-      </form>
-    </div>
-  </transition>
+          <div class="modal__field">
+            <label for="description">Description:</label>
+            <textarea
+              v-model="description"
+              @focus="handleFocus"
+              id="description"
+              class="modal__description"
+              name="description"
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+
+          <div class="modal__field  modal__field--col-2">
+            <button class="modal__btn-save" type="submit">
+              save
+            </button>
+            <button @click="handleClose" class="modal__btn-close" type="button">
+              close
+            </button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  </div>
 </template>
 
 <script>
+import A11yDialog from "a11y-dialog";
+
 export default {
   name: "ModalEdit",
   data() {
     return {
+      dialog: undefined,
       name: "",
       description: ""
     };
   },
   props: {
+    isShow: {
+      type: Boolean,
+      required: true
+    },
     id: Number,
     modalName: {
       type: String,
@@ -77,6 +98,15 @@ export default {
       if (val !== prevVal) {
         this.description = val;
       }
+    },
+    isShow(val) {
+      if (this.dialog) {
+        if (val) {
+          this.dialog.show();
+        } else {
+          this.dialog.hide();
+        }
+      }
     }
   },
 
@@ -87,12 +117,20 @@ export default {
 
     handleSubmit() {
       this.changeItem(this.id, this.name, this.description);
-      this.closeModal();
+      this.dialog.hide();
     },
 
-    handleClick() {
-      this.closeModal();
+    handleClose() {
+      this.dialog && this.dialog.hide();
     }
+  },
+
+  mounted() {
+    this.dialog = new A11yDialog(this.$refs.modal);
+
+    this.dialog.on("hide", () => {
+      this.closeModal();
+    });
   }
 };
 </script>
@@ -146,13 +184,16 @@ button {
   resize: none;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+/** a11y-dialog **/
+[data-a11y-dialog-native] > :first-child {
+  display: none;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+dialog[open] {
+  display: block;
+}
+
+.dialog-container[aria-hidden="true"] {
+  display: none;
 }
 </style>
