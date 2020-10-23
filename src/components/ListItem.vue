@@ -84,6 +84,10 @@ export default {
 </script>
 
 <style scoped>
+.item:focus {
+  outline: 0;
+}
+
 .item__header {
   display: flex;
   justify-content: space-between;

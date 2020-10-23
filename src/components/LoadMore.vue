@@ -38,6 +38,9 @@ export default {
 
       lastItem.tabIndex = 0;
       lastItem.focus();
+      setTimeout(() => {
+        lastItem.tabIndex = -1;
+      }, 100);
     }
   }
 };
